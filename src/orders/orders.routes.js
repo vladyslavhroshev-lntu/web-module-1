@@ -23,25 +23,21 @@ const orderResponse = (order) => ({
 });
 
 router.post("/", (req, res, next) => {
-    try {
-        const validationErrors = validateCreateOrder(req.body);
-        if (validationErrors.length > 0) {
-            return res
-                .status(400)
-                .json(validationProblem("Invalid order", validationErrors));
-        }
-
-        const orderDetails = normalizeCreateOrderRequest(req.body);
-        const newOrder = createOrder(orderDetails);
-        const response = orderResponse(newOrder);
-
+    const validationErrors = validateCreateOrder(req.body);
+    if (validationErrors.length > 0) {
         return res
-            .status(201)
-            .location(`/orders/${newOrder.id}`)
-            .json(response);
-    } catch (error) {
-        return next(error);
+            .status(400)
+            .json(validationProblem("Invalid order", validationErrors));
     }
+
+    const orderDetails = normalizeCreateOrderRequest(req.body);
+    const newOrder = createOrder(orderDetails);
+    const response = orderResponse(newOrder);
+
+    return res
+        .status(201)
+        .location(`/orders/${newOrder.id}`)
+        .json(response);
 });
 
 router.get("/", (req, res) => {
@@ -55,34 +51,26 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", (req, res, next) => {
-    try {
-        const requestedId = req.params.id;
-        const matchingOrder = getOrderById(requestedId);
+    const requestedId = req.params.id;
+    const matchingOrder = getOrderById(requestedId);
 
-        if (matchingOrder === null) {
-            return res.status(404).json(notFoundProblem());
-        }
-
-        const response = orderResponse(matchingOrder);
-        return res.status(200).json(response);
-    } catch (error) {
-        return next(error);
+    if (matchingOrder === null) {
+        return res.status(404).json(notFoundProblem());
     }
+
+    const response = orderResponse(matchingOrder);
+    return res.status(200).json(response);
 });
 
 router.delete("/:id", (req, res, next) => {
-    try {
-        const orderId = req.params.id;
+    const orderId = req.params.id;
 
-        const status = deleteOrderById(orderId);
-        if (!status) {
-            return res.status(404).json(notFoundProblem());
-        }
-
-        return res.status(204).send();
-    } catch (error) {
-        return next(error);
+    const status = deleteOrderById(orderId);
+    if (!status) {
+        return res.status(404).json(notFoundProblem());
     }
+
+    return res.status(204).send();
 });
 
 module.exports = router;
