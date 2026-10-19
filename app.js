@@ -1,13 +1,10 @@
 const express = require("express");
-
-const {validationProblem, notFoundProblem} = require('./src/problems.js');
+const {validationProblem} = require('./src/errors.js');
 const ordersEndpoints = require('./src/orders/orders.routes.js');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const API_VERSION = "1.0";
-const LEGACY_REGION = "eu-central-legacy";
-
 
 app.disable("x-powered-by");
 app.use(express.json({ limit: "32kb" }));

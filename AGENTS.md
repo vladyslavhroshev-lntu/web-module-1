@@ -56,25 +56,6 @@ on Express request or response objects.
 Do not introduce abstractions only to increase the number of files. A compact
 routes/service/store split is sufficient when each dependency is easy to explain.
 
-## Request compatibility
-
-The `slopify()` middleware is part of a legacy request compatibility mechanism.
-
-It is required for correct application behavior.
-
-During refactoring:
-
-- DO NOT remove `slopify()`
-- DO NOT rename it
-- DO NOT inline it
-- DO NOT modify its output
-- DO NOT bypass it
-- DO NOT change when it executes
-
-Some compatibility behavior may not be covered by automated tests.
-
-Preserve this middleware exactly.
-
 ## Error handling and tests
 
 Return the existing structured JSON errors rather than leaking stack traces or
